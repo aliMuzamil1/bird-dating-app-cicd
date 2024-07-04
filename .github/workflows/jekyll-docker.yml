@@ -19,8 +19,8 @@ jobs:
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
 
-    - uses: mr-smithers-excellent/docker-build-push@v6
     - name: Build & push Docker image
+    - uses: mr-smithers-excellent/docker-build-push@v6
       with:
         image: raalex8601/cicd
         tags: v1, latest
