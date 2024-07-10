@@ -1,27 +1,11 @@
-FROM node:16-alpine as development
+# Use an official Nginx runtime as a parent image
+FROM nginx
 
-WORKDIR /app
+# Copy your HTML site into the Nginx web server directory
+COPY ./page /usr/share/nginx/html
 
-COPY package.json ./
-COPY npm-shrinkwrap.json ./
-COPY .npmrc ./
+# Expose the Nginx port to the host
+EXPOSE 80
 
-RUN npm install --global npm@latest
-RUN npm ci
-
-COPY .*.js ./
-COPY *config.?js ./
-COPY vite.config.ts ./
-COPY index.html ./
-COPY public ./public
-COPY src ./src
-
-CMD [ "npm", "start"]
-
-FROM development as builder
-
-RUN npm run build
-
-FROM nginx:1.21-alpine as production
-
-COPY --from=builder /app/build /usr/share/nginx/html
+# Start Nginx when the container launches
+CMD ["nginx", "-g", "daemon off;"]
